@@ -16,4 +16,3 @@ These are example snippets and BUILD files for [Bazel](https://github.com/bazelb
 #2130  docker run -v `pwd`/bazel_cache/:/data -p 8080:8080 buchgr/bazel-remote-cache --max_size=5  #
 #2131  docker run -v `pwd`/bazel_cache/:/data -p 8080:8080 buchgr/bazel-remote-cache --max_size=10 #
 ####################################################################################################
-
