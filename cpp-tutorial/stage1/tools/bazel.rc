@@ -1,0 +1,56 @@
+# +------------------------------------------------------------+
+# | Startup Options                                            |
+# +------------------------------------------------------------+
+startup --batch_cpu_scheduling
+
+# +------------------------------------------------------------+
+# | Test Configurations                                        |
+# +------------------------------------------------------------+
+# Specify protobuf cc toolchain
+
+# +------------------------------------------------------------+
+# | CPP Lint Tests & Unit Tests                                |
+# +------------------------------------------------------------+
+# By default, cpplint tests are run as part of `bazel test` alongside all of
+# the other compilation and test targets.  This is a convenience shortcut to
+# only do the cpplint testing and nothing else.
+# Do bazel test --config=cpplint <target> to enable this configuration.
+# To enable the lint test, the BUILD *must* load the cpplint.bzl by having
+# 'load("//tools:cpplint.bzl", "cpplint")' at the beginning and 'cpplint()'
+# at the end.
+
+# Regular unit tests.
+
+# +------------------------------------------------------------+
+# | Build Configurations                                       |
+# +------------------------------------------------------------+
+# Do not show warnings from external dependencies.
+build --output_filter="^//"
+
+# Work around the sandbox issue.
+build --spawn_strategy=standalone
+
+# Specify protobuf cc toolchain
+build --experimental_strict_action_env --remote_http_cache=http://192.168.1.102:8080
+
+# build with profiling
+build:cpu_prof --linkopt=-lprofiler
+
+# Enable colorful output of GCC
+test --cxxopt="-fdiagnostics-color=always"
+
+# Enable C++17
+build --cxxopt="-std=c++17"
+
+# Warning as Error, PLEASE BE VERY CAREFUL TO THIS WHEN COMPILER VERSION UPDATED
+# build --cxxopt="-Werror"
+# test --cxxopt="-Werror"
+
+build --compiler=compiler
+build --cpu=k8
+
+## Remote Cache
+#build:remote --remote_local_fallback=true
+#build:remote --remote_local_fallback_strategy=local
+#build:remote --experimental_remote_retry=false
+#build:remote --remote_http_cache=http://ec2-52-81-93-138.cn-north-1.compute.amazonaws.com.cn:8888/

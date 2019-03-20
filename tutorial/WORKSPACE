@@ -1,0 +1,33 @@
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+git_repository(
+    name = "build_bazel_rules_apple",
+    remote = "https://github.com/bazelbuild/rules_apple.git",
+    tag = "0.13.0",
+)
+
+load(
+    "@build_bazel_rules_apple//apple:repositories.bzl",
+    "apple_rules_dependencies",
+)
+
+apple_rules_dependencies()
+
+load(
+    "@build_bazel_rules_swift//swift:repositories.bzl",
+    "swift_rules_dependencies",
+)
+
+swift_rules_dependencies()
+
+http_archive(
+    name = "io_bazel_rules_appengine",
+    sha256 = "d1fbc9a48332cc00b56d66751b5eb911ac9a88e820af7a2316a9b5ed4ee46d0b",
+    strip_prefix = "rules_appengine-0.0.7",
+    url = "https://github.com/bazelbuild/rules_appengine/archive/0.0.7.tar.gz",
+)
+
+load("@io_bazel_rules_appengine//appengine:appengine.bzl", "appengine_repositories")
+
+appengine_repositories()
