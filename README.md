@@ -1,4 +1,5 @@
 # bazelexample_hitcache
+o`
 o
 
 bazelexample_hitcache
