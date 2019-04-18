@@ -1,0 +1,93 @@
+# +------------------------------------------------------------+
+# | Startup Options                                            |
+# +------------------------------------------------------------+
+startup --batch_cpu_scheduling
+
+# +------------------------------------------------------------+
+# | Test Configurations                                        |
+# +------------------------------------------------------------+
+
+# By default prints output only from failed tests.
+test --test_output=errors
+
+# Work around the sandbox issue.
+test --spawn_strategy=standalone
+
+# Specify protobuf cc toolchain
+test --proto_toolchain_for_cc="@com_google_protobuf//:cc_toolchain"
+
+# +------------------------------------------------------------+
+# | CPP Lint Tests & Unit Tests                                |
+# +------------------------------------------------------------+
+# By default, cpplint tests are run as part of `bazel test` alongside all of
+# the other compilation and test targets.  This is a convenience shortcut to
+# only do the cpplint testing and nothing else.
+# Do bazel test --config=cpplint <target> to enable this configuration.
+# To enable the lint test, the BUILD *must* load the cpplint.bzl by having
+# 'load("//tools:cpplint.bzl", "cpplint")' at the beginning and 'cpplint()'
+# at the end.
+test:cpplint --test_tag_filters=cpplint
+test:cpplint --build_tests_only
+
+# Regular unit tests.
+test:unit_test --test_tag_filters=-cpplint
+
+# Coverage tests
+test:coverage --test_tag_filters=-cpplint
+test:coverage --copt=--coverage
+test:coverage --cxxopt=--coverage
+test:coverage --cxxopt=-fprofile-arcs
+test:coverage --cxxopt=-ftest-coverage
+test:coverage --linkopt=-coverage
+test:coverage --linkopt=-lgcov
+test:coverage --linkopt=-lgcc
+test:coverage --linkopt=-lc
+
+# CI test
+test:ci --test_tag_filters=-cpplint
+test:ci --jvmopt="-server"
+test:ci --jvmopt="-Xms512m"
+test:ci --jvmopt="-Xmx8g"
+test:ci --ram_utilization_factor=30
+
+
+# +------------------------------------------------------------+
+# | Build Configurations                                       |
+# +------------------------------------------------------------+
+# Do not show warnings from external dependencies.
+build --output_filter="^//"
+
+# Work around the sandbox issue.
+build --spawn_strategy=standalone
+
+# Specify protobuf cc toolchain
+build --proto_toolchain_for_cc="@com_google_protobuf//:cc_toolchain"
+build:remote --experimental_strict_action_env --remote_http_cache=http://192.168.1.102:8080
+build:remote --experimental_execution_log_file=/tmp/exec1.log
+build:remote --build_event_text_file=/tmp/bep.txt
+build:remote --remote_upload_local_results=false
+build:remote_cache --remote_upload_local_results=true
+
+# build with profiling
+build:cpu_prof --linkopt=-lprofiler
+
+# Enable colorful output of GCC
+test --cxxopt="-fdiagnostics-color=always"
+
+# Enable C++17
+build --cxxopt="-std=c++17"
+test --cxxopt="-std=c++17"
+
+# Warning as Error, PLEASE BE VERY CAREFUL TO THIS WHEN COMPILER VERSION UPDATED
+# build --cxxopt="-Werror"
+# test --cxxopt="-Werror"
+
+build --crosstool_top=//tools/cc_wrapper_crosstools:toolchain
+build --compiler=compiler
+build --cpu=k8
+
+## Remote Cache
+#build:remote --remote_local_fallback=true
+#build:remote --remote_local_fallback_strategy=local
+#build:remote --experimental_remote_retry=false
+#build:remote --remote_http_cache=http://ec2-52-81-93-138.cn-north-1.compute.amazonaws.com.cn:8888/
