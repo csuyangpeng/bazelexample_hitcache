@@ -1,0 +1,9 @@
+# Create a new CROSSTOOL file for our toolchain.
+build:test --crosstool_top=//toolchain:testsuite
+
+# Use --cpu as a differentiator.
+build:test --compiler=test
+build:test --cpu=test
+
+# Specify a "sane" C++ toolchain for the host platform.
+build:test --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
