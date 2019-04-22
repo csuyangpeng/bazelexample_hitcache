@@ -10,7 +10,10 @@ startup --batch_cpu_scheduling
 build --output_filter="^//"
 
 # Work around the sandbox issue.
-# build --spawn_strategy=standalone
+build --spawn_strategy=standalone
+
+# Specify protobuf cc toolchain
+build --proto_toolchain_for_cc="@com_google_protobuf//:cc_toolchain"
 
 # Enable C++17
 build --cxxopt="-std=c++17"
@@ -18,5 +21,4 @@ build --cxxopt="-std=c++17"
 build --crosstool_top=//tools/cc_wrapper_crosstools:toolchain
 build --compiler=compiler
 build --cpu=k8
-build --spawn_strategy=remote --genrule_strategy=remote --remote_executor=192.168.4.74:8980
 

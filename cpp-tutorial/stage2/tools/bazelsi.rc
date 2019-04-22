@@ -18,5 +18,5 @@ build --cxxopt="-std=c++17"
 build --crosstool_top=//tools/cc_wrapper_crosstools:toolchain
 build --compiler=compiler
 build --cpu=k8
-build --spawn_strategy=remote --genrule_strategy=remote --remote_executor=192.168.4.74:8980
 
+build --spawn_strategy=standalone
